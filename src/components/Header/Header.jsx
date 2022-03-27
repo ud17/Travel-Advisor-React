@@ -12,7 +12,7 @@ const Header = () => {
         <div>
             <AppBar position="static">
                 <Toolbar className={classes.toolbar}>
-                    {/* You can make variant as 'Heading', ' Titles'
+                    {/* You can make variant as 'Heading', 'Titles'
                     or 'Subtitles' */}
                     <Typography variant="h5" className={classes.title}>
                         Travel Advisor
