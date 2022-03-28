@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 // CssBaseline simple fixes the padding and margin automatically for us
 import { CssBaseline, Grid } from "@material-ui/core";
 
@@ -6,7 +6,26 @@ import Header from "./components/Header/Header";
 import List from "./components/List/List";
 import Map from "./components/Maps/Maps";
 
+import { getPlacesData } from "./api/index";
+
 const App = () => {
+    const [places, setPlaces] = useState([]);
+    const [bounds, setBounds] = useState({});
+    const [coordinates, setCoordinates] = useState({});
+
+    // useEffect to set user coordinates
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition(({coords: {latitude, longitude}}) => {
+            setCoordinates({ lat: latitude, lng: longitude});
+        })
+    }, []);
+
+    // use 'useEffect' while making api calls'
+    useEffect(() => {
+        getPlacesData(bounds.sw, bounds.ne).then((data) => {
+            setPlaces(data);
+        })
+    }, [coordinates, bounds]);
 
     return (
         <>  
@@ -19,14 +38,20 @@ const App = () => {
                 md(medium devices or larger): 4 spaces */}
                 {/* List */}
                 <Grid item xs={12} md={4}>
-                    <List />
+                    <List 
+                        places={places}
+                    />
                 </Grid>
                 {/* type: item
                 xs(mobile devices): full width
                 md(medium devices or larger): 8 spaces */}
                 {/* Map */}
                 <Grid item xs={12} md={8}>
-                    <Map />
+                    <Map 
+                        setCoordinates={setCoordinates}
+                        setBounds={setBounds}
+                        coordinates={coordinates}
+                    />
                 </Grid>
             </Grid>
         </>
