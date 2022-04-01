@@ -11,7 +11,9 @@ import { getPlacesData } from "./api/index";
 const App = () => {
     const [places, setPlaces] = useState([]);
     const [bounds, setBounds] = useState({});
+    const [childClicked, setChildClicked] = useState({});
     const [coordinates, setCoordinates] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
 
     // useEffect to set user coordinates
     useEffect(() => {
@@ -22,8 +24,10 @@ const App = () => {
 
     // use 'useEffect' while making api calls'
     useEffect(() => {
+        setIsLoading(true);
         getPlacesData(bounds.sw, bounds.ne).then((data) => {
             setPlaces(data);
+            setIsLoading(false);
         })
     }, [coordinates, bounds]);
 
@@ -40,6 +44,8 @@ const App = () => {
                 <Grid item xs={12} md={4}>
                     <List 
                         places={places}
+                        childClicked={childClicked}
+                        isLoading={isLoading}
                     />
                 </Grid>
                 {/* type: item
@@ -51,6 +57,8 @@ const App = () => {
                         setCoordinates={setCoordinates}
                         setBounds={setBounds}
                         coordinates={coordinates}
+                        places={places}
+                        setChildClicked={setChildClicked}
                     />
                 </Grid>
             </Grid>
