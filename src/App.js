@@ -10,6 +10,7 @@ import { getPlacesData } from "./api/index";
 
 const App = () => {
     const [places, setPlaces] = useState([]);
+    const [filteredPlaces , setFilteredPlaces] = useState([]);
     const [bounds, setBounds] = useState({});
     const [type, setType] = useState("restaurants");
     const [rating, setRating] = useState('');
@@ -24,11 +25,19 @@ const App = () => {
         })
     }, []);
 
+    // useEffect to filter places based on ratings
+    useEffect(()=> {
+        const filteredPlace = places.filter((place) => place.rating > rating);
+        setFilteredPlaces(filteredPlace);
+    }, [rating]);
+
     // use 'useEffect' while making api calls'
     useEffect(() => {
         setIsLoading(true);
         getPlacesData(type, bounds.sw, bounds.ne).then((data) => {
             setPlaces(data);
+            // setFilteredPlaces array to empty when the data is loaded again
+            setFilteredPlaces([]);
             setIsLoading(false);
         })
     }, [type, coordinates, bounds]);
@@ -45,7 +54,7 @@ const App = () => {
                 {/* List */}
                 <Grid item xs={12} md={4}>
                     <List 
-                        places={places}
+                        places={filteredPlaces.length ? filteredPlaces : places}
                         childClicked={childClicked}
                         isLoading={isLoading}
                         type={type}
@@ -63,7 +72,7 @@ const App = () => {
                         setCoordinates={setCoordinates}
                         setBounds={setBounds}
                         coordinates={coordinates}
-                        places={places}
+                        places={filteredPlaces.length ? filteredPlaces : places}
                         setChildClicked={setChildClicked}
                     />
                 </Grid>
