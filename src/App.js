@@ -11,6 +11,8 @@ import { getPlacesData } from "./api/index";
 const App = () => {
     const [places, setPlaces] = useState([]);
     const [bounds, setBounds] = useState({});
+    const [type, setType] = useState("restaurants");
+    const [rating, setRating] = useState('');
     const [childClicked, setChildClicked] = useState({});
     const [coordinates, setCoordinates] = useState({});
     const [isLoading, setIsLoading] = useState(false);
@@ -25,11 +27,11 @@ const App = () => {
     // use 'useEffect' while making api calls'
     useEffect(() => {
         setIsLoading(true);
-        getPlacesData(bounds.sw, bounds.ne).then((data) => {
+        getPlacesData(type, bounds.sw, bounds.ne).then((data) => {
             setPlaces(data);
             setIsLoading(false);
         })
-    }, [coordinates, bounds]);
+    }, [type, coordinates, bounds]);
 
     return (
         <>  
@@ -46,6 +48,10 @@ const App = () => {
                         places={places}
                         childClicked={childClicked}
                         isLoading={isLoading}
+                        type={type}
+                        setType={setType}
+                        rating={rating}
+                        setRating={setRating}
                     />
                 </Grid>
                 {/* type: item
