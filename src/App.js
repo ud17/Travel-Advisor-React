@@ -37,7 +37,7 @@ const App = () => {
             setIsLoading(true);
             getPlacesData(type, bounds.sw, bounds.ne)
                 .then((data) => {
-                    setPlaces(data.filter((place) => place.name && place.num_reviews > 0));
+                    setPlaces(data?.filter((place) => place.name && place.num_reviews > 0));
                     // setFilteredPlaces array to empty when the data is loaded again
                     setFilteredPlaces([]);
                     setIsLoading(false);
