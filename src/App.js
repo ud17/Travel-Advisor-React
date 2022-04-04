@@ -33,19 +33,22 @@ const App = () => {
 
     // use 'useEffect' while making api calls'
     useEffect(() => {
-        setIsLoading(true);
-        getPlacesData(type, bounds.sw, bounds.ne).then((data) => {
-            setPlaces(data);
-            // setFilteredPlaces array to empty when the data is loaded again
-            setFilteredPlaces([]);
-            setIsLoading(false);
-        })
-    }, [type, coordinates, bounds]);
+        if(bounds.sw && bounds.ne) {
+            setIsLoading(true);
+            getPlacesData(type, bounds.sw, bounds.ne)
+                .then((data) => {
+                    setPlaces(data.filter((place) => place.name && place.num_reviews > 0));
+                    // setFilteredPlaces array to empty when the data is loaded again
+                    setFilteredPlaces([]);
+                    setIsLoading(false);
+            })
+        }
+    }, [type, bounds]);
 
     return (
         <>  
             <CssBaseline />
-            <Header />
+            <Header setCoordinates={setCoordinates} />
             {/* type: container */}
             <Grid container spacing={3} style={{width:"100%"}}>
                 {/* type: item
